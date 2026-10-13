@@ -376,13 +376,15 @@
         });
     }
 
-    function navigateTo(inputUrl) {
+        function navigateTo(inputUrl) {
         let cleanUrl = inputUrl.trim();
 
-        if (cleanUrl === "google.com" || cleanUrl === "https://google.com" || cleanUrl === "http://google.com") {
-            cleanUrl = "https://pages.dev";
+        // If you type "google.com", "bing.com", or search terms, route through a frame-friendly portal
+        if (cleanUrl.toLowerCase().includes("google.com") || cleanUrl.toLowerCase().includes("bing.com")) {
+            cleanUrl = "https://duckduckgo.com" + encodeURIComponent(cleanUrl);
         } else if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
-            cleanUrl = "https://pages.dev?q=" + encodeURIComponent(cleanUrl);
+            // Treat plain words or missing protocols as an automatic search query
+            cleanUrl = "https://duckduckgo.com" + encodeURIComponent(cleanUrl);
         }
 
         const currentTab = tabs.find(t => t.id === activeTabId);
@@ -403,6 +405,7 @@
 
         switchTab(activeTabId);
     }
+
 
     function updateHistoryUI() {
         historyList.innerHTML = '';
